@@ -1,0 +1,21 @@
+import requests
+
+def scan_link(url):
+    try:
+        # basic checks
+        if len(url) < 4:
+            return "Invalid link"
+        
+        # check if site is reachable and looks suspicious
+        suspicious = ["free-money", "win-now", ".tk", "login-verify"]
+        for word in suspicious:
+            if word in url.lower():
+                return f"⚠️ SUSPICIOUS: contains '{word}' - might be phishing"
+        
+        r = requests.get(url, timeout=5)
+        if r.status_code == 200:
+            return f"✅ Link is live (Status {r.status_code}). No obvious malware signs found."
+        else:
+            return f"⚠️ Link returned status {r.status_code} - could be risky"
+    except:
+        return "❌ Could not reach link - might be down or dangerous"
